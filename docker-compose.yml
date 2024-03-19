@@ -1,0 +1,27 @@
+services:
+  api:
+    image: spring-api
+    container_name: spring-api
+    build: ./backend
+
+    volumes:
+      - ./backend/src/main/:/app/src/main
+      - ./backend/src/test:/app/src/test
+      - ./backend/target:/app/target
+    command: sh ./docker-entrypoint.sh
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+    restart: always
+
+  db:
+    image: 'postgres:latest'
+    container_name: 'postgres'
+    environment:
+      - 'POSTGRES_DB=mydatabase'
+      - 'POSTGRES_PASSWORD=secret'
+      - 'POSTGRES_USER=myuser'
+    ports:
+      - '5432'
+    restart: always
